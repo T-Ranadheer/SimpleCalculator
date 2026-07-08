@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQ Test</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif
+        }
+
+        body {
+            margin: 0;
+            background: url('https://www.shutterstock.com/image-photo/iq-test-brain-background-knowledge-260nw-235621600.jpg') center/cover no-repeat fixed;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, .65);
+            min-height: 100vh;
+            padding: 30px
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, .95);
+            padding: 25px;
+            border-radius: 12px
+        }
+
+        h1 {
+            text-align: center
+        }
+
+        .question {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px
+        }
+
+        .option {
+            display: block;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 4px 0
+        }
+
+        .correct {
+            background: #c8f7c5;
+            color: #0a5c0a;
+            font-weight: bold
+        }
+
+        .wrong {
+            background: #ffd6d6;
+            color: #a00000;
+            font-weight: bold
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            background: #0078ff;
+            color: #fff;
+            cursor: pointer
+        }
+
+        #result {
+            font-size: 28px;
+            text-align: center;
+            margin: 20px;
+            font-weight: bold
+        }
+
+        .red {
+            color: red
+        }
+
+        .green {
+            color: green
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay">
+        <div class="container">
+            <h1>IQ Testing</h1>
+            <form id="quiz"></form>
+            <div style="text-align:center">
+                <button type="button" onclick="submitQuiz()">Submit Test</button>
+                <button type="button" onclick="location.reload()">Restart</button>
+            </div>
+            <div id="result"></div>
+        </div>
+    </div>
+    <script>
+        const questions = [
+            { q: "1. Which number comes next? 2,4,8,16,?", o: ["18", "24", "32", "30"], a: 2 },
+            { q: "2. Which word is different?", o: ["Dog", "Cat", "Tiger", "Car"], a: 3 },
+            { q: "3. Find the odd one out.", o: ["Triangle", "Square", "Circle", "Apple"], a: 3 },
+            { q: "4. If ALL roses are flowers, then roses are:", o: ["Animals", "Flowers", "Trees", "Birds"], a: 1 },
+            { q: "5. Which letter comes next? A C F J ?", o: ["M", "N", "O", "P"], a: 2 }
+        ];
+        const form = document.getElementById("quiz");
+        questions.forEach((x, i) => {
+            let div = document.createElement("div");
+            div.className = "question";
+            div.innerHTML = "<h3>" + x.q + "</h3>";
+            x.o.forEach((op, j) => {
+                div.innerHTML += `<label class="option" id="q${i}o${j}">
+<input type="radio" name="q${i}" value="${j}"> ${op}
+</label>`;
+            });
+            form.appendChild(div);
+        });
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, i) => {
+                let sel = document.querySelector(`input[name=q${i}]:checked`);
+                let ans = sel ? parseInt(sel.value) : -1;
+                for (let j = 0; j < q.o.length; j++) {
+                    let lbl = document.getElementById(`q${i}o${j}`);
+                    lbl.classList.remove("correct", "wrong");
+                    if (j === q.a) lbl.classList.add("correct");
+                    if (ans === j && ans !== q.a) lbl.classList.add("wrong");
+                }
+                if (ans === q.a) score += 5;
+            });
+            let r = document.getElementById("result");
+            r.textContent = `Your Score: ${score} out of 25`;
+            r.className = (score <= 10) ? "red" : "green";
+            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        }
+    </script>
+</body>
+
+</html>
